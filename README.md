@@ -91,9 +91,9 @@ Ai resumer scorer is a full-stack, production-grade resume intelligence platform
 
 ## 🗂️ Project Structure
 
-```
+
 ![alt text](image-3.png)
-```
+
 
 ---
 
