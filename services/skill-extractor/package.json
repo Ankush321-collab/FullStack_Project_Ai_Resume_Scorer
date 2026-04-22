@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "compromise": "^14.13.0",
@@ -13,9 +12,5 @@
     "mongoose": "^8.0.0",
     "kafkajs": "^2.2.4"
   },
-  "devDependencies": {
-    "@types/node": "^20.11.30",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
-  }
+  "devDependencies": {}
 }
