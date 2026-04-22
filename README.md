@@ -3,7 +3,6 @@
 
 
 ```
-![alt text](image-4.png)
 
 
 
@@ -18,6 +17,11 @@
 ### **AI Resume Scorer**
 
 *An AI-powered resume analysis platform built on a TypeScript MERN stack with event-driven microservices*
+![alt text](image-4.png)
+
+
+
+
 ![alt text](image.png)
 
 <br/>
