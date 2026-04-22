@@ -1,21 +1,22 @@
 <div align="center">
 
 ```
-███╗   ███╗███████╗██████╗ ██████╗
-████╗ ████║██╔════╝██╔══██╗╚════██╗
-██╔████╔██║█████╗  ██████╔╝ █████╔╝
-██║╚██╔╝██║██╔══╝  ██╔══██╗██╔═══╝
-██║ ╚═╝ ██║███████╗██║  ██║██████╗
-╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+ █████╗ ██╗     ██████╗ ███████╗███████╗██╗   ██╗███╗   ███╗███████╗
+██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║   ██║████╗ ████║██╔════╝
+███████║██║     ██████╔╝█████╗  ███████╗██║   ██║██╔████╔██║█████╗  
+██╔══██║██║     ██╔══██╗██╔══╝  ╚════██║██║   ██║██║╚██╔╝██║██╔══╝  
+██║  ██║██║     ██║  ██║███████╗███████║╚██████╔╝██║ ╚═╝ ██║███████╗
+╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
 ```
 
-### **Modern · Efficient · Resume Intelligence**
+### **AI Resume Scorer**
 
 *An AI-powered resume analysis platform built on a TypeScript MERN stack with event-driven microservices*
+![alt text](image.png)
 
 <br/>
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![javascript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
 [![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
@@ -26,9 +27,10 @@
 
 ---
 
-## ✦ What is MER2?
+## ✦ What is AI Resume Scorer?
 
-MER2 is a full-stack, production-grade resume intelligence platform. Candidates upload resumes, match them against job descriptions, identify skill gaps, and track their analysis history — all through a polished, responsive dashboard powered by a streaming microservices pipeline.
+Ai resumer scorer is a full-stack, production-grade resume intelligence platform. Candidates upload resumes, match them against job descriptions, identify skill gaps, and track their analysis history — all through a polished, responsive dashboard powered by a streaming microservices pipeline.
+![alt text](image-1.png)
 
 ---
 
@@ -42,6 +44,7 @@ MER2 is a full-stack, production-grade resume intelligence platform. Candidates 
 | 🗂️ | Resume history management — individual delete and bulk clear |
 | 🧩 | Event-driven microservices: parser → embedder → skill extractor → matcher → feedback |
 | 🎨 | Polished frontend UX with toast notifications and form validation |
+![alt text](image-2.png)
 
 ---
 
@@ -219,6 +222,33 @@ Docker support is provided via `docker-compose.yml` for containerized local or c
 - [x] Frontend routing and API integration
 - [x] Environment-driven configuration
 - [x] Production deployment scaffolding
+
+---
+
+## 🚀 AI Resume Scorer & Enhancer: How It Works
+
+This project is a high-performance MERN application integrated with an AI-driven microservice pipeline. It uses an event-driven architecture to transform sparse resumes into professional, one-page PDFs that match high-fidelity LaTeX templates.
+
+### 🛰️ 1 · The Event-Driven Pipeline (Kafka)
+We use **Apache Kafka** to ensure the system is scalable and asynchronous:
+*   **Job Creation**: When you click "Improve Resume," the Backend sends a message to the `resume_to_enhance` topic.
+*   **Processing**: The **Enhancer Service** picks up the job, processes it through the LLM, and creates the PDF.
+*   **Completion**: Once done, the link appears in your dashboard instantly.
+
+### 🧠 2 · The AI Enrichment Logic (Nebius AI)
+We use the **Llama-3.3-70B** model to perform a "Surgical Upgrade" of the resume content:
+*   **Smart Mapping**: If a project has 2 bullet points, the AI upgrades exactly those 2 bullets. If a section is empty, it generates 2-3 professional ones.
+*   **Metric Injection**: The AI finds opportunities to add quantified achievements (e.g., "Increased revenue by 20%").
+
+### 🛡️ 3 · The Quality Audit Layer
+The system has a built-in "Editor-in-Chief" that runs before PDF creation:
+*   **Density Check**: Scans output to ensure no headers are empty.
+*   **Auto-Retry**: Triggers a rewrite if the initial AI pass is too "thin."
+
+### 📄 4 · The LaTeX-Style PDF Engine
+Built with a custom emulator in `pdf.js` that mirrors **Overleaf LaTeX** macros:
+*   **One-Page Lockdown**: Uses "Pure-Flow" positioning logic to prevent text overlap.
+*   **Typography**: Uses professional font pairings (Times-Bold, Italic) for a distinct academic/professional look.
 
 ---
 
