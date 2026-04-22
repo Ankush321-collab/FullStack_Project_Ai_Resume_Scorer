@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+coverage/
+**/dist/
+**/build/
+**/coverage/
+*.tsbuildinfo
+
+# Logs and runtime files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test artifacts
+playwright-report/
+test-results/
+.nyc_output/
+
+# Backend uploads and temp files
+backend/uploads/
+tmp/
+temp/
+
+# Local secrets and certificates
+*.key
+*.pem
+*.cert
+*.crt
+
+# Docker local overrides
+docker-compose.override.yml
+
+# Misc cache
+.cache/
+.eslintcache
