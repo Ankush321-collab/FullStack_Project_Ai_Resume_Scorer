@@ -1,6 +1,7 @@
 <div align="center">
 
 ```
+![alt text](image-4.png)
  █████╗ ██╗     ██████╗ ███████╗███████╗██╗   ██╗███╗   ███╗███████╗
 ██╔══██╗██║     ██╔══██╗██╔════╝██╔════╝██║   ██║████╗ ████║██╔════╝
 ███████║██║     ██████╔╝█████╗  ███████╗██║   ██║██╔████╔██║█████╗  
@@ -82,22 +83,7 @@ Ai resumer scorer is a full-stack, production-grade resume intelligence platform
 ## 🗂️ Project Structure
 
 ```
-mer2/
-│
-├── 📁 backend/               # Express + TypeScript API (MVC pattern)
-│
-├── 📁 frontend/              # React + Vite application
-│
-├── 📁 services/              # Event-driven pipeline microservices
-│   ├── parser/               #  ↳ Extracts raw content from resumes
-│   ├── embedder/             #  ↳ Generates semantic embeddings
-│   ├── skill-extractor/      #  ↳ Identifies candidate skills
-│   ├── matcher/              #  ↳ Scores resume ↔ job fit
-│   └── feedback/             #  ↳ Generates actionable feedback
-│
-├── 📁 deploy/                # PM2 + Nginx deployment configs
-├── 🐳 docker-compose.yml
-└── 🧪 test-e2e.js / test-pipeline.js
+![alt text](image-3.png)
 ```
 
 ---
