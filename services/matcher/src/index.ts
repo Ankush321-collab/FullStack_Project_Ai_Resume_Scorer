@@ -80,6 +80,28 @@ function cosineSimilarity(a: number[], b: number[]): number {
   return dot / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function calibratedMatchPercentage(
+  semanticSimilarity: number,
+  overlapRatio: number,
+  confidence: number
+): number {
+  // Convert cosine from [-1, 1] to [0, 100] to avoid overly low raw scores.
+  const semanticPct = ((clamp(semanticSimilarity, -1, 1) + 1) / 2) * 100;
+  const overlapPct = clamp(overlapRatio, 0, 1) * 100;
+  const confidencePct = clamp(confidence, 0, 1) * 100;
+
+  // Weighted blend favors semantics but rewards concrete skill overlap.
+  const weighted = semanticPct * 0.55 + overlapPct * 0.35 + confidencePct * 0.1;
+
+  // Light calibration boost for realistic market-facing percentages.
+  const calibrated = weighted + 8;
+  return clamp(Math.round(calibrated * 100) / 100, 0, 100);
+}
+
 async function generateEmbedding(text: string): Promise<number[]> {
   const cacheKey = `embed:${Buffer.from(text.slice(0, 200)).toString("base64")}`;
   const cached = await redis.get(cacheKey);
@@ -195,8 +217,6 @@ async function matchResumes(payload: SkillExtractedEvent): Promise<void> {
       }
 
       const similarity = cosineSimilarity(resumeVector, jobVector);
-      const score = Math.round(similarity * 100 * 100) / 100;
-      const matchPercentage = Math.min(score, 100);
 
       const jobSkillNames = job.skills.length > 0
         ? (job.skills as any[]).map((s) => s.name)
@@ -208,9 +228,21 @@ async function matchResumes(payload: SkillExtractedEvent): Promise<void> {
         .filter((s, idx, arr) => arr.indexOf(s) === idx)
         .filter((s) => !resumeSkillSet.has(s));
 
+      const uniqueJobSkills = jobSkillNames
+        .map(normalizeSkill)
+        .filter((s, idx, arr) => arr.indexOf(s) === idx);
+
+      const matchedSkillsCount = uniqueJobSkills.filter((s) => resumeSkillSet.has(s)).length;
+      const overlapRatio = uniqueJobSkills.length > 0
+        ? matchedSkillsCount / uniqueJobSkills.length
+        : clamp(similarity, 0, 1);
+
       const confidence = jobSkillNames.length > 0
         ? 1 - skillGap.length / jobSkillNames.length
         : similarity;
+
+      const matchPercentage = calibratedMatchPercentage(similarity, overlapRatio, confidence);
+      const score = matchPercentage;
 
       const cacheKey = `match:${resumeId}:${job._id}`;
       const matchData = { score, matchPercentage, skillGap, confidence };

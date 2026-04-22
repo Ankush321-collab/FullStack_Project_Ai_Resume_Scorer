@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "path";
 import { 
   listResumes, getResume, uploadResume, 
-  analyzeResume, deleteResume 
+  analyzeResume, deleteResume, updateResume, clearResumeHistory
 } from "../controllers/resume.controller";
 import { protect } from "../middleware/protect";
 
@@ -33,6 +33,8 @@ router.post("/file", upload.single('file'), (req: any, res) => {
   });
 });
 router.post("/analyze", analyzeResume);
+router.delete("/history", clearResumeHistory);
+router.patch("/:id", updateResume);
 router.delete("/:id", deleteResume);
 
 export default router;

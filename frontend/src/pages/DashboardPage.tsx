@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   Brain, FileText, Plus, Search, 
-  Clock, BarChart3, ChevronRight, Zap
+  Clock, BarChart3, ChevronRight, Zap, Trash2
 } from "lucide-react";
+import { toast } from "react-toastify";
 import api from "../services/api";
 
 export default function DashboardPage({ user }: { user: any }) {
@@ -12,6 +13,8 @@ export default function DashboardPage({ user }: { user: any }) {
   const [resumes, setResumes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState<any>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [clearingAll, setClearingAll] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +37,48 @@ export default function DashboardPage({ user }: { user: any }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
+  };
+
+  const handleDeleteResume = async (resumeId: string, fileName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const confirmed = window.confirm(`Delete resume history for \"${fileName}\"?`);
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(resumeId);
+      await api.delete(`/resumes/${resumeId}`);
+      setResumes((prev) => prev.filter((r) => r.id !== resumeId));
+      setAnalytics((prev: any) =>
+        prev ? { ...prev, totalResumes: Math.max(0, (prev.totalResumes || 0) - 1) } : prev
+      );
+      toast.success("Resume history deleted.");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || "Failed to delete resume history.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleClearAllHistory = async () => {
+    if (resumes.length === 0) {
+      toast.error("No resume history to clear.");
+      return;
+    }
+
+    const confirmed = window.confirm("Delete all resume history? This cannot be undone.");
+    if (!confirmed) return;
+
+    try {
+      setClearingAll(true);
+      await api.delete("/resumes/history");
+      setResumes([]);
+      setAnalytics((prev: any) => (prev ? { ...prev, totalResumes: 0, avgScore: 0 } : prev));
+      toast.success("All resume history cleared.");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || "Failed to clear history.");
+    } finally {
+      setClearingAll(false);
+    }
   };
 
   if (loading) {
@@ -104,9 +149,18 @@ export default function DashboardPage({ user }: { user: any }) {
 
         {/* Resumes List */}
         <div className="space-y-4">
-          <h2 className="text-xl font-bold uppercase tracking-widest mb-6 px-2 flex items-center gap-3">
-             <Clock size={18} className="text-primary" /> Recent Activities
-          </h2>
+          <div className="mb-6 px-2 flex items-center justify-between gap-3">
+            <h2 className="text-xl font-bold uppercase tracking-widest flex items-center gap-3">
+               <Clock size={18} className="text-primary" /> Recent Activities
+            </h2>
+            <button
+              onClick={handleClearAllHistory}
+              disabled={clearingAll || resumes.length === 0}
+              className="btn-premium-outline !py-2 !px-4 !text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {clearingAll ? "Clearing..." : "Clear History"}
+            </button>
+          </div>
           
           {resumes.length === 0 ? (
             <div className="glass-card p-20 text-center border-dashed">
@@ -143,6 +197,14 @@ export default function DashboardPage({ user }: { user: any }) {
                   </div>
                 </div>
                 <div className="flex items-center gap-8">
+                  <button
+                    onClick={(e) => handleDeleteResume(resume.id, resume.fileName, e)}
+                    disabled={deletingId === resume.id}
+                    className="p-2 rounded-lg border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Delete this history item"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                   <div className="text-right hidden sm:block">
                      <p className="text-2xl font-black">{Math.round(resume.matchResults[0]?.matchPercentage || 0)}%</p>
                      <p className="text-[10px] font-bold uppercase tracking-widest text-dimmed">Best Match</p>

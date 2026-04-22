@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Job, Skill, MatchResult, Resume } from "../models/index";
+import mongoose from "mongoose";
 
 const SKILL_KEYWORDS = [
   "javascript", "typescript", "python", "java", "go", "rust", "c++", "c#", "ruby", "php",
@@ -143,6 +144,59 @@ export const matchJob = async (req: any, res: Response) => {
       id: result._id.toString(),
       createdAt: result.createdAt.toISOString(),
       feedback,
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateJob = async (req: any, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid job id" });
+    }
+
+    const job = await Job.findById(id);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+
+    const { title, company, description } = req.body;
+    if (typeof title === "string" && title.trim()) {
+      job.title = title.trim();
+    }
+    if (typeof company === "string") {
+      job.company = company.trim();
+    }
+
+    if (typeof description === "string" && description.trim()) {
+      const normalizedDescription = description.trim();
+      job.description = normalizedDescription;
+
+      const extractedSkills = extractSkillsFromText(normalizedDescription);
+      const skillIds = [];
+
+      for (const name of extractedSkills) {
+        const skill = await Skill.findOneAndUpdate(
+          { name },
+          { name },
+          { upsert: true, new: true }
+        );
+        skillIds.push(skill._id);
+      }
+      job.skills = skillIds as any;
+    }
+
+    await job.save();
+
+    const hydratedJob = await Job.findById(job._id).populate("skills");
+    if (!hydratedJob) return res.status(404).json({ error: "Job not found" });
+
+    res.json({
+      ...hydratedJob.toObject(),
+      id: hydratedJob._id.toString(),
+      skills: (hydratedJob.skills as any[]).map((s) => s.name),
+      createdAt: hydratedJob.createdAt.toISOString(),
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Brain, ArrowRight, Lock, Mail, User } from "lucide-react";
+import { RiErrorWarningFill } from "react-icons/ri";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import api from "../services/api";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
   const location = useLocation();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -22,8 +23,24 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
-    if (!isLogin && !name) return;
+    if (!email || !password) {
+      const message = "Email and password are required.";
+      setError(message);
+      toast.error(message);
+      return;
+    }
+    if (!isLogin && !name.trim()) {
+      const message = "Please enter your full name.";
+      setError(message);
+      toast.error(message);
+      return;
+    }
+    if (!isLogin && password.length < 6) {
+      const message = "Password must be at least 6 characters.";
+      setError(message);
+      toast.error(message);
+      return;
+    }
 
     setError("");
     setLoading(true);
@@ -40,10 +57,13 @@ export default function LoginPage() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
+        toast.success(isLogin ? "Signed in successfully" : "Account created successfully");
         window.location.href = "/upload"; // Refresh to pick up new token/user state
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message);
+      const message = err.response?.data?.error || err.message || "Authentication failed";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -126,14 +146,16 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  minLength={isLogin ? undefined : 6}
                   required
                 />
               </div>
             </div>
 
             {error && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-[13px]">
-                {error}
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-200 text-[13px] flex items-start gap-2">
+                <RiErrorWarningFill className="mt-0.5 shrink-0 text-red-400" />
+                <span>{error}</span>
               </div>
             )}
 

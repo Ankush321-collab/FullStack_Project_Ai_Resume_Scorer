@@ -146,8 +146,76 @@ export const deleteResume = async (req: any, res: Response) => {
     if (!resume || ownerId !== requesterId) {
       return res.status(404).json({ error: "Not found" });
     }
+    await MatchResult.deleteMany({ resumeId: id });
     await Resume.deleteOne({ _id: id });
     res.json({ success: true });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const clearResumeHistory = async (req: any, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+
+    const resumes = await Resume.find({ userId: req.user.id }).select("_id");
+    const resumeIds = resumes.map((r) => r._id);
+
+    if (resumeIds.length > 0) {
+      await MatchResult.deleteMany({ resumeId: { $in: resumeIds } });
+    }
+
+    const deletedResumes = await Resume.deleteMany({ userId: req.user.id });
+
+    res.json({
+      success: true,
+      deletedCount: deletedResumes.deletedCount || 0,
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateResume = async (req: any, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid resume id" });
+    }
+
+    const resume = await Resume.findById(id);
+    const ownerId = String(resume?.userId ?? "").toLowerCase();
+    const requesterId = String(req.user.id ?? "").toLowerCase();
+    if (!resume || ownerId !== requesterId) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
+
+    const { fileName } = req.body;
+    if (typeof fileName !== "string" || !fileName.trim()) {
+      return res.status(400).json({ error: "fileName is required" });
+    }
+
+    resume.fileName = fileName.trim();
+    await resume.save();
+
+    const updated = await Resume.findById(id).populate("skills");
+    if (!updated) return res.status(404).json({ error: "Resume not found" });
+
+    const matchResults = await MatchResult.find({ resumeId: updated._id });
+    const resumeFeedback = typeof updated.feedback === "string" ? updated.feedback : "";
+
+    res.json({
+      ...updated.toObject(),
+      id: updated._id.toString(),
+      skills: (updated.skills as any[]).map((s) => s.name),
+      matchResults: matchResults.map((m) => ({
+        ...m.toObject(),
+        id: m._id.toString(),
+        feedback: resumeFeedback,
+      })),
+      createdAt: (updated.createdAt || new Date()).toISOString(),
+    });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
