@@ -17,12 +17,12 @@
 ### **AI Resume Scorer**
 
 *An AI-powered resume analysis platform built on a TypeScript MERN stack with event-driven microservices*
-![alt text](image-4.png)
+![alt text](code/image-4.png)
 
 
 
 
-![alt text](image.png)
+![alt text](code/image.png)
 
 <br/>
 
@@ -40,7 +40,7 @@
 ## ✦ What is AI Resume Scorer?
 
 Ai resumer scorer is a full-stack, production-grade resume intelligence platform. Candidates upload resumes, match them against job descriptions, identify skill gaps, and track their analysis history — all through a polished, responsive dashboard powered by a streaming microservices pipeline.
-![alt text](image-1.png)
+![alt text](code/image-1.png)
 
 ---
 
@@ -54,7 +54,7 @@ Ai resumer scorer is a full-stack, production-grade resume intelligence platform
 | 🗂️ | Resume history management — individual delete and bulk clear |
 | 🧩 | Event-driven microservices: parser → embedder → skill extractor → matcher → feedback |
 | 🎨 | Polished frontend UX with toast notifications and form validation |
-![alt text](image-2.png)
+![alt text](code/image-2.png)
 
 ---
 
@@ -92,7 +92,7 @@ Ai resumer scorer is a full-stack, production-grade resume intelligence platform
 ## 🗂️ Project Structure
 
 
-![alt text](image-3.png)
+![alt text](code/image-3.png)
 
 
 ---

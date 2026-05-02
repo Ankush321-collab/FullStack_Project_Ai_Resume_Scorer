@@ -1,0 +1,24 @@
+{
+  "name": "mer2-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../services/parser && npm install && cd ../embedder && npm install && cd ../skill-extractor && npm install && cd ../matcher && npm install && cd ../feedback && npm install && cd ../enhancer && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:parser": "cd services/parser && npm run dev",
+    "dev:embedder": "cd services/embedder && npm run dev",
+    "dev:matcher": "cd services/matcher && npm run dev",
+    "dev:skills": "cd services/skill-extractor && npm run dev",
+    "dev:feedback": "cd services/feedback && npm run dev",
+    "dev:enhancer": "cd services/enhancer && node src/index.js",
+    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:parser\" \"npm run dev:embedder\" \"npm run dev:matcher\" \"npm run dev:skills\" \"npm run dev:feedback\" \"npm run dev:enhancer\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "form-data": "^4.0.5",
+    "pdfkit": "^0.18.0"
+  }
+}

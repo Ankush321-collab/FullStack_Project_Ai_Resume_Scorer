@@ -1,0 +1,20 @@
+{
+  "name": "enhancer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.15.2",
+    "dotenv": "^17.4.2",
+    "ioredis": "^5.10.1",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^9.5.0",
+    "pdfkit": "^0.18.0"
+  }
+}
